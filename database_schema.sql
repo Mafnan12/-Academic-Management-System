@@ -231,18 +231,6 @@ CREATE TABLE `assignments` (
   INDEX `idx_due_date` (`due_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Payments table
-CREATE TABLE `payments` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `fee_id` int(11) NOT NULL,
-  `amount_paid` decimal(10,2) NOT NULL,
-  `payment_date` date NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  FOREIGN KEY (`fee_id`) REFERENCES `fees`(`id`) ON DELETE CASCADE,
-  INDEX `idx_fee_id` (`fee_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 -- Attendance table
 CREATE TABLE `attendance` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -284,6 +272,18 @@ CREATE TABLE `fees` (
   INDEX `idx_status` (`status`),
   INDEX `idx_due_date` (`due_date`),
   INDEX `idx_semester` (`semester`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Payments table
+CREATE TABLE `payments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `fee_id` int(11) NOT NULL,
+  `amount_paid` decimal(10,2) NOT NULL,
+  `payment_date` date NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`fee_id`) REFERENCES `fees`(`id`) ON DELETE CASCADE,
+  INDEX `idx_fee_id` (`fee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Notifications table
