@@ -1,5 +1,6 @@
 <?php
 $current_page = basename($_SERVER['PHP_SELF']);
+$role = $_SESSION['role'] ?? 'user';
 ?>
 <aside class="fixed left-0 top-0 h-screen w-72 border-r border-white/40 bg-white/80 dark:bg-slate-950/80 backdrop-blur-2xl shadow-2xl flex flex-col py-8 gap-2 z-50">
 <div class="px-8 mb-8">
@@ -15,6 +16,7 @@ $current_page = basename($_SERVER['PHP_SELF']);
 </div>
 </div>
 <nav class="flex-1 space-y-1">
+<?php if ($role === 'admin'): ?>
 <a class="<?php echo $current_page == 'index.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/index.php">
 <span class="material-symbols-outlined">dashboard</span>
 <span class="font-body-md">Dashboard</span>
@@ -23,13 +25,13 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <span class="material-symbols-outlined">group</span>
 <span class="font-body-md">Students</span>
 </a>
-<a class="<?php echo $current_page == 'courses.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
-<span class="material-symbols-outlined">school</span>
-<span class="font-body-md">Courses</span>
-</a>
 <a class="<?php echo $current_page == 'instructors.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/instructors.php">
 <span class="material-symbols-outlined">person</span>
 <span class="font-body-md">Instructors</span>
+</a>
+<a class="<?php echo $current_page == 'courses.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-md">Courses</span>
 </a>
 <a class="<?php echo $current_page == 'enrollments.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/enrollments.php">
 <span class="material-symbols-outlined">how_to_reg</span>
@@ -39,6 +41,42 @@ $current_page = basename($_SERVER['PHP_SELF']);
 <span class="material-symbols-outlined">assessment</span>
 <span class="font-body-md">Reports</span>
 </a>
+<?php elseif ($role === 'instructor'): ?>
+<a class="<?php echo $current_page == 'instructor_dashboard.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/instructor_dashboard.php">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="<?php echo $current_page == 'courses.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-md">Courses</span>
+</a>
+<a class="<?php echo $current_page == 'reports.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Reports</span>
+</a>
+<?php elseif ($role === 'student'): ?>
+<a class="<?php echo $current_page == 'student_dashboard.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/student_dashboard.php">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="<?php echo $current_page == 'courses.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
+<span class="material-symbols-outlined">school</span>
+<span class="font-body-md">Courses</span>
+</a>
+<a class="<?php echo $current_page == 'reports.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Reports</span>
+</a>
+<?php elseif ($role === 'parent'): ?>
+<a class="<?php echo $current_page == 'parent_dashboard.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/parent_dashboard.php">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md">Dashboard</span>
+</a>
+<a class="<?php echo $current_page == 'reports.php' ? 'bg-[#1a237e] text-white shadow-lg shadow-indigo-900/20' : 'text-slate-600 hover:bg-indigo-50/50'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-body-md">Reports</span>
+</a>
+<?php endif; ?>
 </nav>
 <div class="mt-auto border-t border-slate-100 pt-6">
 <a class="text-error mx-4 px-4 py-3 flex items-center gap-3 hover:bg-error-container/20 rounded-lg transition-all duration-300" href="<?php echo BASE_URL; ?>/auth/logout.php">

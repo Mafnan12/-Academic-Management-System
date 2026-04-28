@@ -9,14 +9,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_student'])) {
     $first_name = trim($_POST['first_name']);
     $last_name = trim($_POST['last_name']);
     $email = trim($_POST['email']);
-    $department = trim($_POST['department']);
     $phone = trim($_POST['phone']);
     $dob = $_POST['dob'];
+    $bform_cnic = trim($_POST['bform_cnic']);
+    $address = trim($_POST['address']);
+    $parent_info = trim($_POST['parent_info']);
+    $admission_year = trim($_POST['admission_year']);
+    $class = trim($_POST['class']);
+    $section = trim($_POST['section']);
+    $roll_number = trim($_POST['roll_number']);
+    $batch_year = trim($_POST['batch_year']);
 
     if (!empty($first_name) && !empty($last_name) && filter_var($email, FILTER_VALIDATE_EMAIL)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO students (first_name, last_name, email, phone, department, dob) VALUES (?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$first_name, $last_name, $email, $phone, $department, $dob]);
+            $stmt = $pdo->prepare("INSERT INTO students (first_name, last_name, email, phone, dob, bform_cnic, address, parent_info, admission_year, class, section, roll_number, batch_year) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$first_name, $last_name, $email, $phone, $dob, $bform_cnic, $address, $parent_info, $admission_year, $class, $section, $roll_number, $batch_year]);
             set_flash_message('success', 'Student added successfully.');
         } catch (PDOException $e) {
             set_flash_message('error', 'Error adding student: ' . $e->getMessage());
@@ -97,15 +104,16 @@ require_once '../includes/header.php';
         <thead>
             <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                 <th class="px-6 py-4">Name</th>
-                <th class="px-6 py-4">Department</th>
+                <th class="px-6 py-4">Class/Section</th>
+                <th class="px-6 py-4">Roll Number</th>
                 <th class="px-6 py-4">Email / Phone</th>
-                <th class="px-6 py-4">Enrolled Date</th>
+                <th class="px-6 py-4">Status</th>
                 <?php if(is_admin()): ?><th class="px-6 py-4 text-right">Actions</th><?php endif; ?>
             </tr>
         </thead>
         <tbody class="divide-y divide-gray-100">
             <?php if(empty($students)): ?>
-                <tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No students found.</td></tr>
+                <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">No students found.</td></tr>
             <?php else: ?>
                 <?php foreach($students as $student): ?>
                 <tr class="hover:bg-indigo-50/30 transition-colors">
@@ -113,14 +121,20 @@ require_once '../includes/header.php';
                         <div class="font-semibold text-[#1a237e]"><?php echo htmlspecialchars($student['first_name'] . ' ' . $student['last_name']); ?></div>
                     </td>
                     <td class="px-6 py-4">
-                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold"><?php echo htmlspecialchars($student['department']); ?></span>
+                        <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold"><?php echo htmlspecialchars($student['class'] . ' ' . $student['section']); ?></span>
                     </td>
+                    <td class="px-6 py-4 text-gray-700"><?php echo htmlspecialchars($student['roll_number']); ?></td>
                     <td class="px-6 py-4">
                         <div class="text-sm text-gray-800"><?php echo htmlspecialchars($student['email']); ?></div>
                         <div class="text-xs text-gray-500"><?php echo htmlspecialchars($student['phone']); ?></div>
                     </td>
-                    <td class="px-6 py-4 text-gray-500 text-sm">
-                        <?php echo date('d-m-Y', strtotime($student['created_at'])); ?>
+                    <td class="px-6 py-4">
+                        <span class="px-2 py-1 rounded-full text-xs font-bold
+                            <?php echo $student['status'] === 'active' ? 'bg-green-100 text-green-800' :
+                                     ($student['status'] === 'transferred' ? 'bg-yellow-100 text-yellow-800' :
+                                     ($student['status'] === 'left' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800')); ?>">
+                            <?php echo htmlspecialchars(ucfirst($student['status'])); ?>
+                        </span>
                     </td>
                     <?php if(is_admin()): ?>
                     <td class="px-6 py-4 text-right">
@@ -170,16 +184,7 @@ require_once '../includes/header.php';
                 <label class="block text-xs font-semibold text-gray-600 mb-1">Email Address</label>
                 <input type="email" name="email" required class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
             </div>
-            <div class="mb-4">
-                <label class="block text-xs font-semibold text-gray-600 mb-1">Department</label>
-                <select name="department" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]" required>
-                    <option value="Computer Science">Computer Science</option>
-                    <option value="Software Engineering">Software Engineering</option>
-                    <option value="Artificial Intelligence">Artificial Intelligence</option>
-                    <option value="Data Science">Data Science</option>
-                </select>
-            </div>
-            <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Phone Number</label>
                     <input type="text" name="phone" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
@@ -187,6 +192,58 @@ require_once '../includes/header.php';
                 <div>
                     <label class="block text-xs font-semibold text-gray-600 mb-1">Date of Birth</label>
                     <input type="date" name="dob" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-gray-600 mb-1">B-Form/CNIC</label>
+                <input type="text" name="bform_cnic" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
+            </div>
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Address</label>
+                <textarea name="address" rows="2" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]"></textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Parent Information</label>
+                <textarea name="parent_info" rows="2" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]"></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Admission Year</label>
+                    <input type="text" name="admission_year" placeholder="2020" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Batch Year</label>
+                    <input type="text" name="batch_year" placeholder="2020-2024" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Class</label>
+                    <select name="class" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
+                        <option value="">Select Class</option>
+                        <option value="BCS-1">BCS-1</option>
+                        <option value="BCS-2">BCS-2</option>
+                        <option value="BCS-3">BCS-3</option>
+                        <option value="BCS-4">BCS-4</option>
+                        <option value="BCS-5">BCS-5</option>
+                        <option value="BCS-6">BCS-6</option>
+                        <option value="BCS-7">BCS-7</option>
+                        <option value="BCS-8">BCS-8</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Section</label>
+                    <select name="section" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
+                        <option value="">Select Section</option>
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                        <option value="D">D</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-gray-600 mb-1">Roll Number</label>
+                    <input type="text" name="roll_number" placeholder="2020-BCS-001" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
                 </div>
             </div>
             <div class="flex justify-end gap-2">

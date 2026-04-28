@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($username) || empty($password)) {
         $error = "Please enter both username and password.";
     } else {
-        $stmt = $pdo->prepare("SELECT id, username, password_hash, role FROM users WHERE username = ?");
+        $stmt = $pdo->prepare("SELECT id, username, password_hash, role, email FROM users WHERE username = ?");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
 
@@ -24,7 +24,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
-            header("Location: " . BASE_URL . "/index.php");
+            $_SESSION['email'] = $user['email'];
+
+            // Redirect based on role
+            switch ($user['role']) {
+                case 'admin':
+                    header("Location: " . BASE_URL . "/index.php");
+                    break;
+                case 'instructor':
+                    header("Location: " . BASE_URL . "/pages/instructor_dashboard.php");
+                    break;
+                case 'student':
+                    header("Location: " . BASE_URL . "/pages/student_dashboard.php");
+                    break;
+                case 'parent':
+                    header("Location: " . BASE_URL . "/pages/parent_dashboard.php");
+                    break;
+                default:
+                    header("Location: " . BASE_URL . "/index.php");
+            }
             exit();
         } else {
             $error = "Invalid username or password.";

@@ -26,6 +26,28 @@ function is_admin() {
     return isset($_SESSION['role']) && $_SESSION['role'] === 'admin';
 }
 
+// Function to check if user is instructor
+function is_instructor() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'instructor';
+}
+
+// Function to check if user is student
+function is_student() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'student';
+}
+
+// Function to check if user is parent
+function is_parent() {
+    return isset($_SESSION['role']) && $_SESSION['role'] === 'parent';
+}
+
+// Function to check role permissions
+function has_permission($required_role) {
+    $user_role = $_SESSION['role'] ?? '';
+    $role_hierarchy = ['parent' => 1, 'student' => 2, 'instructor' => 3, 'admin' => 4];
+    return ($role_hierarchy[$user_role] ?? 0) >= ($role_hierarchy[$required_role] ?? 0);
+}
+
 // Flash messages function
 function set_flash_message($type, $message) {
     $_SESSION['flash'][$type] = $message;

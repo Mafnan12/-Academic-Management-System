@@ -4,25 +4,40 @@ require_once 'includes/db.php';
 
 check_login();
 
+// Redirect based on role
+if (is_instructor()) {
+    header("Location: pages/instructor_dashboard.php");
+    exit();
+} elseif (is_student()) {
+    header("Location: pages/student_dashboard.php");
+    exit();
+} elseif (is_parent()) {
+    header("Location: pages/parent_dashboard.php");
+    exit();
+}
+
+// Admin dashboard continues below
 // Fetch summary data for dashboard
 $totalStudents = $pdo->query("SELECT COUNT(*) FROM students")->fetchColumn();
 $totalCourses = $pdo->query("SELECT COUNT(*) FROM courses")->fetchColumn();
 $totalInstructors = $pdo->query("SELECT COUNT(*) FROM instructors")->fetchColumn();
-$totalEnrollments = $pdo->query("SELECT COUNT(*) FROM enrollments")->fetchColumn();
+$totalClasses = $pdo->query("SELECT COUNT(*) FROM classes")->fetchColumn();
+$totalExams = $pdo->query("SELECT COUNT(*) FROM exams WHERE status = 'scheduled'")->fetchColumn();
 
 // Fetch recent enrollments
 $recentEnrollments = $pdo->query("
-    SELECT e.enrollment_date, s.first_name, s.last_name, c.course_name, c.department
-    FROM enrollments e
-    JOIN students s ON e.student_id = s.id
-    JOIN courses c ON e.course_id = c.id
-    ORDER BY e.enrollment_date DESC
+    SELECT sce.enrollment_date, s.first_name, s.last_name, c.course_name, cl.section
+    FROM student_class_enrollment sce
+    JOIN students s ON sce.student_id = s.id
+    JOIN classes cl ON sce.class_id = cl.id
+    JOIN courses c ON cl.course_id = c.id
+    ORDER BY sce.enrollment_date DESC
     LIMIT 5
 ")->fetchAll();
 
 // Fetch latest added students
 $latestStudents = $pdo->query("
-    SELECT first_name, last_name, department, email, created_at
+    SELECT first_name, last_name, class, section, email, created_at
     FROM students
     ORDER BY created_at DESC
     LIMIT 5
@@ -68,11 +83,21 @@ require_once 'includes/header.php';
     <div class="glass-card p-6 rounded-xl shadow-sm hover:-translate-y-1 transition-all duration-300">
         <div class="flex items-start justify-between mb-4">
             <div class="p-3 bg-indigo-50 text-[#1a237e] rounded-lg">
-                <span class="material-symbols-outlined">person</span>
+                <span class="material-symbols-outlined">class</span>
             </div>
         </div>
-        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Instructors</p>
-        <h3 class="text-3xl font-black text-[#1a237e]"><?php echo number_format($totalInstructors); ?></h3>
+        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Total Classes</p>
+        <h3 class="text-3xl font-black text-[#1a237e]"><?php echo number_format($totalClasses); ?></h3>
+    </div>
+
+    <div class="glass-card p-6 rounded-xl shadow-sm hover:-translate-y-1 transition-all duration-300">
+        <div class="flex items-start justify-between mb-4">
+            <div class="p-3 bg-indigo-50 text-[#1a237e] rounded-lg">
+                <span class="material-symbols-outlined">quiz</span>
+            </div>
+        </div>
+        <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Scheduled Exams</p>
+        <h3 class="text-3xl font-black text-[#1a237e]"><?php echo number_format($totalExams); ?></h3>
     </div>
 
     <div class="glass-card p-6 rounded-xl shadow-sm hover:-translate-y-1 transition-all duration-300">
@@ -82,7 +107,7 @@ require_once 'includes/header.php';
             </div>
         </div>
         <p class="text-gray-500 text-xs font-bold uppercase tracking-wider mb-1">Enrollments</p>
-        <h3 class="text-3xl font-black text-[#1a237e]"><?php echo number_format($totalEnrollments); ?></h3>
+        <h3 class="text-3xl font-black text-[#1a237e]"><?php echo number_format($totalStudents); ?></h3>
     </div>
 </section>
 
@@ -99,7 +124,7 @@ require_once 'includes/header.php';
                 <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                     <th class="px-6 py-4">Student Name</th>
                     <th class="px-6 py-4">Course</th>
-                    <th class="px-6 py-4">Department</th>
+                    <th class="px-6 py-4">Section</th>
                     <th class="px-6 py-4">Date</th>
                 </tr>
             </thead>
@@ -112,7 +137,7 @@ require_once 'includes/header.php';
                         <td class="px-6 py-4 font-semibold text-[#1a237e]"><?php echo htmlspecialchars($enr['first_name'] . ' ' . $enr['last_name']); ?></td>
                         <td class="px-6 py-4 text-gray-700"><?php echo htmlspecialchars($enr['course_name']); ?></td>
                         <td class="px-6 py-4">
-                            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold"><?php echo htmlspecialchars($enr['department']); ?></span>
+                            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold"><?php echo htmlspecialchars($enr['section']); ?></span>
                         </td>
                         <td class="px-6 py-4 text-gray-500 text-sm"><?php echo date('d-m-Y', strtotime($enr['enrollment_date'])); ?></td>
                     </tr>
@@ -135,22 +160,24 @@ require_once 'includes/header.php';
             <thead>
                 <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
                     <th class="px-6 py-4">Student Name</th>
-                    <th class="px-6 py-4">Department</th>
+                    <th class="px-6 py-4">Class</th>
+                    <th class="px-6 py-4">Section</th>
                     <th class="px-6 py-4">Email</th>
                     <th class="px-6 py-4">Added On</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-100">
                 <?php if(empty($latestStudents)): ?>
-                    <tr><td colspan="4" class="px-6 py-4 text-center text-gray-500">No students found.</td></tr>
+                    <tr><td colspan="5" class="px-6 py-4 text-center text-gray-500">No students found.</td></tr>
                 <?php else: ?>
                     <?php foreach($latestStudents as $student): ?>
                     <tr class="hover:bg-indigo-50/30 transition-colors">
                         <td class="px-6 py-4 font-semibold text-[#1a237e]"><?php echo htmlspecialchars($student['first_name'] . ' ' . $student['last_name']); ?></td>
+                        <td class="px-6 py-4 text-gray-700"><?php echo htmlspecialchars($student['class']); ?></td>
                         <td class="px-6 py-4">
-                            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold"><?php echo htmlspecialchars($student['department']); ?></span>
+                            <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-xs font-bold"><?php echo htmlspecialchars($student['section']); ?></span>
                         </td>
-                        <td class="px-6 py-4 text-gray-700"><?php echo htmlspecialchars($student['email']); ?></td>
+                        <td class="px-6 py-4 text-gray-500 text-sm"><?php echo htmlspecialchars($student['email']); ?></td>
                         <td class="px-6 py-4 text-gray-500 text-sm"><?php echo date('d-m-Y', strtotime($student['created_at'])); ?></td>
                     </tr>
                     <?php endforeach; ?>

@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$dbname = 'fast_student_management';
+$dbname = 'fast_university_management';
 $user = 'root'; // default xampp user
 $pass = ''; // default xampp pass
 

@@ -19,8 +19,8 @@ CREATE TABLE `users` (
 -- Insert users (Password for both is 'password123')
 -- password_hash generated using PHP password_hash('password123', PASSWORD_DEFAULT)
 INSERT INTO `users` (`username`, `password_hash`, `role`) VALUES
-('admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin'),
-('viewer', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user');
+('admin', '$2y$10$qvHJAohA3Q8oXf.0XxmThO/9kFGsd0TU.xKQ86KnI5mySJWP6Lo3a', 'admin'),
+('viewer', '$2y$10$qvHJAohA3Q8oXf.0XxmThO/9kFGsd0TU.xKQ86KnI5mySJWP6Lo3a', 'user');
 
 -- --------------------------------------------------------
 

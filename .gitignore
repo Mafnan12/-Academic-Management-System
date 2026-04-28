@@ -1,0 +1,45 @@
+# PHP configuration
+config/
+includes/db.php
+
+# Database files
+*.sql
+*.backup
+*.bak
+database.sql
+database_schema.sql
+
+# Cache and logs
+cache/
+logs/
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Dependencies
+vendor/
+node_modules/
+
+# Environment files
+.env
+.env.local
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# System files
+.DS_Store
+desktop.ini
