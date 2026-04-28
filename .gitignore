@@ -1,13 +1,5 @@
-# PHP configuration
-config/
+# Database credentials (never commit real passwords)
 includes/db.php
-
-# Database files
-*.sql
-*.backup
-*.bak
-database.sql
-database_schema.sql
 
 # Cache and logs
 cache/
@@ -20,6 +12,7 @@ Thumbs.db
 *.swp
 *.swo
 *~
+desktop.ini
 
 # IDE
 .vscode/
@@ -34,12 +27,16 @@ node_modules/
 # Environment files
 .env
 .env.local
+.env.production
 
 # Temporary files
 tmp/
 temp/
 *.tmp
 
-# System files
-.DS_Store
-desktop.ini
+# Uploaded files (user-generated, not tracked)
+assets/uploads/
+
+# Backup files
+*.backup
+*.bak

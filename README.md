@@ -1,199 +1,310 @@
-# FAST University Management System
+# 🎓 FAST University — Academic Management System
 
-A comprehensive web-based university management system built with PHP, MySQL, and Tailwind CSS. This system provides role-based access control for administrators, instructors, students, and parents to manage academic activities efficiently.
+A comprehensive, full-stack university management system built with **PHP 8+**, **MySQL**, and **Tailwind CSS**. Designed with role-based access control for administrators, instructors, students, and parents to manage academic activities end-to-end.
 
-## 🚀 Features
+> **Course Project** — Database Systems (FAST NUCES)
 
-### Core Functionality
-- **Multi-Role Authentication**: Admin, Instructor, Student, and Parent roles with hierarchical permissions
-- **Student Management**: Complete student profiles with class, section, roll number, and academic details
-- **Course Management**: Create and manage courses with departments and credit hours
-- **Class Management**: Organize students into classes and sections
-- **Instructor Management**: Assign instructors to courses and classes
-- **Enrollment System**: Track student enrollments in classes
-- **Examination System**: Schedule and manage exams with results tracking
-- **Results Management**: Record and display student exam results
-- **Attendance Tracking**: Monitor student attendance (framework ready)
-- **Fee Management**: Track student fees and payments
-- **Parent Portal**: Parents can monitor their children's progress
-- **Reports & Analytics**: Generate comprehensive reports
+---
 
-### User Dashboards
-- **Admin Dashboard**: System overview, user management, and analytics
-- **Instructor Dashboard**: Class management, student results, and assignments
-- **Student Dashboard**: Course enrollment, results, and attendance
-- **Parent Dashboard**: Children's progress, fees, and notifications
+## 📑 Table of Contents
 
-### Technical Features
-- **Responsive Design**: Mobile-friendly interface with glassmorphism effects
-- **Secure Authentication**: Session-based login with role validation
-- **Database Optimization**: Indexed tables with foreign key constraints
-- **Modern UI**: Tailwind CSS with Material Symbols icons
-- **Error Handling**: Comprehensive error management and validation
+- [Features](#-features)
+- [User Roles & Permissions](#-user-roles--permissions)
+- [Tech Stack](#-tech-stack)
+- [Database Schema](#-database-schema)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Default Credentials](#-default-credentials)
+- [Screenshots](#-screenshots)
+- [ERD](#-erd)
+- [License](#-license)
 
-## 🛠 Installation
+---
 
-### Prerequisites
-- PHP 8.0 or higher
-- MySQL 5.7 or higher
-- Apache or Nginx web server
+## ✨ Features
 
-### Setup Steps
+### 1. Student Management
+- Add / edit / delete student profiles with full personal details
+- Store name, DOB, B-Form/CNIC, parent info, contact, address
+- Admission year, class, section assignment
+- Student status tracking (active, transferred, left)
+- Unique roll number generation per batch
+- Batch/year tagging for cohort management
 
-1. Copy the `fast_sms` folder to your web server root.
-2. Create a MySQL database named `fast_university_management`.
-3. Open `setup.php` in your browser to create tables and seed sample data.
-4. Alternatively, import `database_schema.sql` directly in MySQL.
+### 2. Teacher (Instructor) Management
+- Add / edit / delete instructor profiles
+- Assign subjects, departments, and classes
+- Contact and employment information (qualification, specialization, hire date)
+- Designation tracking (Subject Teacher, Class Incharge, etc.)
+- Instructor login for result entry and class management
 
-### Configure the database
-Update `includes/db.php` with your database credentials:
+### 3. Parents Portal
+- Secure parent login with child-specific access
+- View child's profile, class, section, and assigned subjects
+- Access term-wise results with subject-wise marks, grades, and remarks
+- Attendance summary and exam schedules
+- Fee challan generation and payment status tracking
+- Multiple children under one parent account via `parent_student_link`
 
-```php
-$host = 'localhost';
-$dbname = 'fast_university_management';
-$user = 'root';
-$pass = '';
-```
+### 4. Class & Section Management
+- Create and manage classes (e.g., BSCS-1, BSCS-2, etc.)
+- Assign sections (A, B, C) with capacity management
+- Assign instructors to class sections
+- Room allocation and scheduling
 
-### Login
-Open `auth/login.php` in the browser.
+### 5. Course/Subject Management
+- Add and manage courses with department assignment
+- Credit hours and fee configuration per course
+- Mark as compulsory or elective
+- Assign instructors to courses and classes
+- Prerequisite tracking
 
-Default admin credentials:
-- Username: `admin`
-- Password: `password123`
+### 6. Term & Exam Management
+- Define exam types: quiz, midterm, final, assignment, project
+- Set total marks and passing marks per exam
+- Schedule exam dates with time slots and room assignment
+- Exam status tracking: scheduled → ongoing → completed → cancelled
+- Lock/unlock exams for result entry
 
-> `setup.php` chooses `database_schema.sql` if it exists, otherwise it uses `database.sql`.
+### 7. Student-Course Mapping (Enrollment)
+- Enroll students in class sections
+- Track enrollment status: enrolled, dropped, completed
+- Auto-link students to courses based on class enrollment
+- Teachers see only their assigned subjects/students
+
+### 8. Marks & Result Management
+- Teachers enter marks per subject per student
+- Auto-calculate percentage and grade
+- Generate results per student, class, or subject
+- Store historical results term-wise and year-wise
+- Admin moderation and entered-by tracking
+
+### 9. Grading & Evaluation Settings
+- Configurable grading criteria (A+ = 95%+, A = 90%+, etc.)
+- Pass/fail thresholds per subject
+- Remarks section per subject or overall
+- Pre-seeded grading scale in database
+
+### 10. Reporting & Analytics
+- Admin dashboard with system-wide KPIs
+- Class-wise and subject-wise result summaries
+- Student performance trends across terms
+- Attendance analytics
+- Fee collection and overdue reports
+
+### 11. Attendance Module
+- Daily attendance tracking per class section
+- Status options: present, absent, late, excused
+- Instructor-marked with audit trail (`marked_by`)
+- Unique constraint per student/class/date
+
+### 12. Fee & Payment Management
+- Fee types: tuition, exam, library, lab, transport, other
+- Payment tracking with due date management
+- Fee status: pending, paid, overdue, waived
+- Semester-wise fee assignment
+
+### 13. Notifications
+- System notifications for all user roles
+- Types: info, warning, success, error
+- Read/unread status tracking
+
+### 14. Audit & Security
+- Session-based authentication with role validation
+- Password hashing with bcrypt
+- Role-based access control on every page
+- Database-level referential integrity with foreign keys
+- Indexed tables for query performance
+
+---
+
+## 🔐 User Roles & Permissions
+
+| Role | Access Level |
+|---|---|
+| **Admin** | Full system access — manage users, courses, classes, enrollments, exams, results, fees, reports |
+| **Instructor** | View assigned classes, enter results, manage assignments, mark attendance, instructor dashboard |
+| **Student** | View own profile, enrolled courses, results, attendance, fee status, student dashboard |
+| **Parent** | Monitor child's academic progress, attendance, fees, notifications via parent dashboard |
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Backend** | PHP 8.0+ |
+| **Database** | MySQL 5.7+ / 8.0+ |
+| **Frontend** | HTML5, Tailwind CSS (CDN), JavaScript |
+| **Icons** | Google Material Symbols |
+| **Server** | Apache (XAMPP / WAMP / LAMP) |
+| **Architecture** | MVC-inspired with role-based access control |
+
+---
+
+## 🗄 Database Schema
+
+### Core Tables (16 tables)
+
+| Table | Purpose |
+|---|---|
+| `users` | Authentication and role management |
+| `students` | Student profiles with academic details |
+| `instructors` | Faculty profiles with qualifications |
+| `parents` | Parent/guardian profiles |
+| `parent_student_link` | M:N relationship between parents and students |
+| `courses` | Course catalog with credits and fees |
+| `classes` | Course sections with scheduling |
+| `student_class_enrollment` | Student enrollment in class sections |
+| `exams` | Exam scheduling and configuration |
+| `exam_results` | Student marks and grades per exam |
+| `assignments` | Class assignments with due dates |
+| `attendance` | Daily attendance records |
+| `fees` | Fee records per student per semester |
+| `payments` | Payment transactions against fees |
+| `notifications` | System messages for all users |
+
+### Key Design Decisions
+- **3NF Normalized** — No transitive dependencies
+- **Referential Integrity** — CASCADE/SET NULL on all foreign keys
+- **Performance Indexed** — Indexes on email, department, status, dates, and foreign keys
+- **Audit Ready** — `entered_by` tracking on results, `marked_by` on attendance
+
+> See [ERD.md](ERD.md) for the full Entity Relationship Diagram.
+
+---
 
 ## 📁 Project Structure
 
 ```
-fast_sms/
-├── auth/
-│   ├── login.php
-│   └── logout.php
-├── includes/
-│   ├── config.php
-│   ├── db.php
-│   ├── footer.php
-│   ├── header.php
-│   └── sidebar.php
-├── pages/
-│   ├── classes.php
-│   ├── courses.php
-│   ├── enrollments.php
-│   ├── exams.php
-│   ├── instructors.php
-│   ├── instructor_dashboard.php
-│   ├── parent_dashboard.php
-│   ├── reports.php
-│   ├── student_dashboard.php
-│   └── students.php
+├── .gitignore
+├── README.md
+├── ERD.md                          # Entity Relationship Diagram (Mermaid)
+├── database_schema.sql             # Complete schema + sample data
+├── setup.php                       # Browser-based DB setup utility
+├── index.php                       # Admin dashboard (entry point)
 ├── assets/
 │   └── images/
-├── database_schema.sql
-├── index.php
-├── README.md
-└── setup.php
+│       ├── logo.png                # University logo
+│       ├── campus1.jpg             # Login page background
+│       └── campus2.jpg             # Login page background
+├── auth/
+│   ├── login.php                   # Multi-role authentication
+│   └── logout.php                  # Session cleanup
+├── includes/
+│   ├── config.php                  # Session helpers & role checks
+│   ├── db.php                      # PDO database connection
+│   ├── header.php                  # HTML head + top navigation
+│   ├── sidebar.php                 # Role-aware sidebar navigation
+│   └── footer.php                  # Page footer
+└── pages/
+    ├── students.php                # Student CRUD management
+    ├── instructors.php             # Instructor CRUD management
+    ├── courses.php                 # Course CRUD management
+    ├── classes.php                 # Class/section management
+    ├── enrollments.php             # Student enrollment management
+    ├── exams.php                   # Exam scheduling & results
+    ├── reports.php                 # Analytics & reporting
+    ├── instructor_dashboard.php    # Instructor portal
+    ├── student_dashboard.php       # Student portal
+    └── parent_dashboard.php        # Parent portal
 ```
 
-## 🗄 Database Schema
+---
 
-### Main tables
-- `users`
-- `students`
-- `instructors`
-- `parents`
-- `courses`
-- `classes`
-- `student_class_enrollment`
-- `exams`
-- `exam_results`
-- `attendance`
-- `fees`
-- `notifications`
+## 🚀 Installation
 
-### Relationships
-- Students ↔ Classes via `student_class_enrollment`
-- Courses → Classes
-- Instructors → Classes
-- Parents ↔ Students via `parent_student_link`
-- Classes → Exams
-- Students → Exam Results and Attendance
+### Prerequisites
+- PHP 8.0+
+- MySQL 5.7+
+- Apache web server (XAMPP recommended for local dev)
 
-## 🔐 Roles and Permissions
+### Setup Steps
 
-### Admin
-- Full access across the system
-- Manage users, courses, classes, enrollments, exams, and reports
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Mafnan12/-Academic-Management-System.git
+   cd -Academic-Management-System
+   ```
 
-### Instructor
-- View assigned classes
-- Access instructor dashboard and reports
+2. **Deploy to web server**
+   Copy the project to your Apache document root:
+   ```bash
+   # XAMPP (Windows)
+   cp -r . C:/xampp/htdocs/fast_sms/
 
-### Student
-- View enrolled courses and results
-- Access student dashboard
+   # Or create a symlink
+   ```
 
-### Parent
-- Monitor child progress from parent dashboard
+3. **Configure database connection**
+   Create `includes/db.php` with your credentials:
+   ```php
+   <?php
+   $host = 'localhost';
+   $dbname = 'fast_university_management';
+   $user = 'root';
+   $pass = '';
 
-## 🎨 Design Notes
+   try {
+       $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $pass);
+       $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+       $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+   } catch (PDOException $e) {
+       die("Connection failed: " . $e->getMessage());
+   }
+   ?>
+   ```
 
-- Built with Tailwind CSS for responsive UI
-- Glassmorphism cards and gradient accents
-- Material Symbols icons for navigation
-- Uses `assets/images/logo.png`, `campus1.jpg`, and `campus2.jpg`
+4. **Initialize the database**
 
-## 🔧 Configuration
+   **Option A** — Browser setup (recommended):
+   ```
+   http://localhost/fast_sms/setup.php
+   ```
 
-### Database connection
-Update `includes/db.php` with your environment settings:
+   **Option B** — Direct SQL import:
+   ```bash
+   mysql -u root -p < database_schema.sql
+   ```
 
-```php
-$host = 'localhost';
-$dbname = 'fast_university_management';
-$user = 'root';
-$pass = '';
-```
+5. **Login**
+   ```
+   http://localhost/fast_sms/auth/login.php
+   ```
 
-### Session helpers
-`includes/config.php` includes functions such as:
-- `check_login()`
-- `is_admin()`
-- `is_instructor()`
-- `is_student()`
-- `is_parent()`
-- `has_permission()`
+---
 
-## 📊 Sample Data
+## 🔑 Default Credentials
 
-`database_schema.sql` includes seeded sample records for:
-- Admin user
-- Instructors
-- Students
-- Courses
-- Classes
-- Enrollments
-- Exams and exam results
+| Role | Username | Password |
+|---|---|---|
+| Admin | `admin` | `password123` |
+| Instructor | `instructor1` | `password123` |
+| Student | `student1` | `password123` |
+| Parent | `parent1` | `password123` |
 
-## 🚀 Recommended Enhancements
+> ⚠️ Change default passwords immediately in a production environment.
 
-- Add dedicated Instructor and Parent management pages
-- Add attendance entry workflows
-- Add CSRF protection for form submissions
-- Add file upload support for profile photos and assignments
-- Add chart-based analytics to the reports page
-- Add notifications for users
+---
 
-## 🐛 Troubleshooting
+## 📸 Screenshots
 
-### Common issues
-- Database connection failed: check `includes/db.php` and MySQL status
-- Login redirect issues: check `BASE_URL` in `includes/config.php`
-- Missing images: verify `assets/images/logo.png`, `campus1.jpg`, and `campus2.jpg`
+*Screenshots of the login page, admin dashboard, student management, and result entry are available in the application itself. Run locally to preview.*
+
+---
+
+## 📊 ERD
+
+The full Entity Relationship Diagram is documented in [ERD.md](ERD.md) using Mermaid syntax, covering all 16 tables with their relationships, data types, and constraints.
+
+---
+
+## 👨‍💻 Author
+
+**Muhammad Afnan** — FAST NUCES
+
+---
 
 ## 📄 License
 
-This project is open source and available under the MIT License.
-
-
+This project is open source and available under the [MIT License](LICENSE).
