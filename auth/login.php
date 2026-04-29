@@ -57,50 +57,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - FAST SMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Inter', sans-serif; }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+          theme: {
+            extend: {
+              colors: {
+                  primary: "#A51C30",
+                  primaryDark: "#750F1D"
+              },
+              fontFamily: {
+                  sans: ["Inter", "sans-serif"],
+                  serif: ["Playfair Display", "serif"]
+              }
+            }
+          }
         }
-    </style>
+    </script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen relative">
+<body class="bg-gray-900 flex items-center justify-center min-h-screen relative font-sans">
     
-    <!-- Background Image with Overlay -->
+    <!-- Premium Campus Background -->
     <div class="absolute inset-0 z-0">
-        <!-- Will try to load campus1.jpg, fallback to dark blue gradient -->
-        <div class="absolute inset-0 bg-gradient-to-br from-[#1a237e]/90 to-[#000666]/90 z-10"></div>
-        <img src="<?php echo BASE_URL; ?>/assets/images/campus1.jpg" alt="Campus" class="w-full h-full object-cover z-0" onerror="this.style.display='none'">
+        <div class="absolute inset-0 bg-black/50 z-10 backdrop-blur-[2px]"></div>
+        <img src="<?php echo BASE_URL; ?>/assets/images/campus1.jpg" alt="FAST University Campus" class="w-full h-full object-cover z-0" onerror="this.style.display='none'">
     </div>
 
-    <div class="z-20 w-full max-w-md p-8 glass-panel rounded-2xl shadow-2xl border border-white/50">
-        <div class="text-center mb-8">
-            <img src="<?php echo BASE_URL; ?>/assets/images/logo.png" alt="FAST Logo" class="w-16 h-16 mx-auto mb-4 object-contain" onerror="this.outerHTML='<div class=\'w-16 h-16 mx-auto mb-4 bg-indigo-900 rounded-full flex items-center justify-center text-white font-bold text-2xl\'>F</div>'">
-            <h1 class="text-2xl font-bold text-[#1a237e]">FAST University</h1>
-            <p class="text-sm text-gray-500 font-medium tracking-wide uppercase mt-1">Student Management System</p>
+    <!-- Elegant Login Card -->
+    <div class="z-20 w-full max-w-[420px] p-10 bg-white/95 backdrop-blur-3xl rounded-3xl shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)] border border-white/40">
+        
+        <div class="text-center mb-10">
+            <div class="w-16 h-16 mx-auto mb-5 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/30 text-white font-serif font-black text-3xl">F</div>
+            <h1 class="text-3xl font-black text-gray-900 font-serif tracking-tight mb-1">FAST University</h1>
+            <p class="text-[11px] text-primary font-bold tracking-[0.2em] uppercase">Management Platform</p>
         </div>
 
         <?php if ($error): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4" role="alert">
-                <span class="block sm:inline"><?php echo htmlspecialchars($error); ?></span>
+            <div class="bg-red-50 border border-red-100 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm font-medium flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg>
+                <?php echo htmlspecialchars($error); ?>
             </div>
         <?php endif; ?>
 
         <form method="POST" action="">
             <div class="mb-5">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Username</label>
-                <input type="text" name="username" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#1a237e] focus:border-[#1a237e] transition-colors" placeholder="Enter username (e.g. admin)" required>
+                <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Username</label>
+                <input type="text" name="username" class="w-full px-5 py-3.5 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-gray-800 font-medium placeholder-gray-400 outline-none" placeholder="e.g. admin" required>
             </div>
             
-            <div class="mb-6">
-                <label class="block text-sm font-semibold text-gray-700 mb-2">Password</label>
-                <input type="password" name="password" class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#1a237e] focus:border-[#1a237e] transition-colors" placeholder="Enter password" required>
-                <p class="text-xs text-gray-500 mt-2">Hint: Use admin / password123</p>
+            <div class="mb-8">
+                <label class="block text-xs font-bold text-gray-500 mb-2 uppercase tracking-wider">Password</label>
+                <input type="password" name="password" class="w-full px-5 py-3.5 bg-gray-50 rounded-xl border border-gray-200 focus:bg-white focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all text-gray-800 font-medium placeholder-gray-400 outline-none" placeholder="••••••••" required>
+                <p class="text-[11px] text-gray-400 mt-2 font-medium">Hint: admin / password123</p>
             </div>
 
-            <button type="submit" class="w-full bg-[#1a237e] text-white font-bold py-3 px-4 rounded-lg hover:bg-[#000666] transition-colors shadow-lg">
+            <button type="submit" class="w-full bg-primary text-white font-bold py-4 px-4 rounded-xl hover:bg-primaryDark transition-all duration-300 shadow-[0_10px_20px_-10px_rgba(165,28,48,0.5)] hover:shadow-[0_10px_20px_-10px_rgba(165,28,48,0.8)] font-serif tracking-widest text-lg hover:-translate-y-0.5">
                 Sign In
             </button>
         </form>

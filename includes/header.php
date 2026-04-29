@@ -11,7 +11,7 @@ $role = $_SESSION['role'] ?? 'user';
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>FAST University | Student Management System</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@600;700;800;900&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script id="tailwind-config">
         tailwind.config = {
@@ -19,60 +19,19 @@ $role = $_SESSION['role'] ?? 'user';
           theme: {
             extend: {
               "colors": {
-                      "surface-container": "#eeeef0",
-                      "on-tertiary-fixed": "#390c00",
-                      "outline": "#767683",
-                      "secondary-fixed-dim": "#bac3ff",
-                      "error": "#ba1a1a",
-                      "surface-dim": "#d9dadc",
-                      "on-secondary": "#ffffff",
-                      "secondary-fixed": "#dee0ff",
-                      "inverse-surface": "#2f3132",
-                      "on-error": "#ffffff",
-                      "on-error-container": "#93000a",
-                      "primary-fixed-dim": "#bdc2ff",
-                      "on-surface-variant": "#454652",
-                      "on-secondary-container": "#11278e",
-                      "on-background": "#1a1c1d",
-                      "on-secondary-fixed": "#00105c",
-                      "on-surface": "#1a1c1d",
-                      "secondary": "#4355b9",
-                      "tertiary-fixed": "#ffdbd0",
-                      "surface-container-lowest": "#ffffff",
-                      "surface-container-high": "#e8e8ea",
-                      "on-primary-fixed": "#000767",
-                      "surface-container-highest": "#e2e2e4",
-                      "surface": "#f9f9fb",
-                      "on-tertiary": "#ffffff",
-                      "tertiary-fixed-dim": "#ffb59d",
-                      "surface-tint": "#4c56af",
-                      "on-primary-fixed-variant": "#343d96",
-                      "surface-variant": "#e2e2e4",
-                      "primary-container": "#1a237e",
-                      "primary-fixed": "#e0e0ff",
-                      "on-primary": "#ffffff",
-                      "surface-bright": "#f9f9fb",
-                      "inverse-primary": "#bdc2ff",
-                      "on-primary-container": "#8690ee",
-                      "on-tertiary-container": "#e17c5a",
-                      "error-container": "#ffdad6",
-                      "surface-container-low": "#f3f3f5",
-                      "on-tertiary-fixed-variant": "#7b2e12",
-                      "outline-variant": "#c6c5d4",
-                      "secondary-container": "#8596ff",
-                      "primary": "#000666",
-                      "inverse-on-surface": "#f0f0f2",
-                      "tertiary-container": "#5c1800",
-                      "tertiary": "#380b00",
-                      "on-secondary-fixed-variant": "#293ca0",
-                      "background": "#f9f9fb"
+                      "primary-container": "#A51C30", /* Harvard Crimson */
+                      "primary-dark": "#750F1D", /* Darker Crimson */
+                      "secondary-accent": "#D4AF37", /* Gold for contrast */
+                      "success-green": "#10b981", 
+                      "surface-glass": "rgba(255, 255, 255, 0.90)",
+                      "background": "#F5F5F5" /* Premium soft gray */
               },
               "fontFamily": {
-                      "body-md": ["Inter"],
-                      "h2": ["Inter"],
-                      "label-sm": ["Inter"],
-                      "body-lg": ["Inter"],
-                      "h1": ["Inter"]
+                      "body-md": ["Inter", "sans-serif"],
+                      "h2": ["Playfair Display", "serif"],
+                      "label-sm": ["Inter", "sans-serif"],
+                      "body-lg": ["Inter", "sans-serif"],
+                      "h1": ["Playfair Display", "serif"]
               }
             },
           },
@@ -80,12 +39,25 @@ $role = $_SESSION['role'] ?? 'user';
     </script>
 <style>
         .glass-card {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card:hover {
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        .glass-card-dark {
+            background: #A51C30;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            box-shadow: 0 10px 40px -10px rgba(165,28,48,0.4);
         }
         .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
         }
     </style>
 </head>
@@ -105,10 +77,10 @@ $role = $_SESSION['role'] ?? 'user';
 <div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
 <div class="flex items-center gap-3 pl-2">
 <div class="text-right">
-<p class="text-body-md font-bold text-[#1a237e]"><?php echo htmlspecialchars(ucfirst($username)); ?></p>
-<p class="text-[11px] font-bold text-outline uppercase tracking-wider"><?php echo htmlspecialchars($role); ?></p>
+<p class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars(ucfirst($username)); ?></p>
+<p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest"><?php echo htmlspecialchars($role); ?></p>
 </div>
-<div class="w-10 h-10 rounded-full bg-primary-container text-white flex items-center justify-center font-bold">
+<div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 text-primary-container flex items-center justify-center font-bold font-serif text-lg">
     <?php echo strtoupper(substr($username, 0, 1)); ?>
 </div>
 </div>

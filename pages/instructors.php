@@ -47,7 +47,7 @@ $limit = 10;
 $offset = ($page - 1) * $limit;
 
 // Build Query
-$query = "FROM instructors WHERE 1=1";
+$query = "FROM instructors i WHERE 1=1";
 $params = [];
 if (!empty($search)) {
     $query .= " AND (first_name LIKE ? OR last_name LIKE ? OR email LIKE ?)";

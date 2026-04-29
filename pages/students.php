@@ -84,7 +84,7 @@ require_once '../includes/header.php';
         <p class="text-sm text-gray-500">Manage university student records</p>
     </div>
     <?php if(is_admin()): ?>
-    <button onclick="document.getElementById('addModal').classList.remove('hidden')" class="bg-[#1a237e] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#000666] transition flex items-center gap-2">
+    <button onclick="openModal()" class="bg-[#1a237e] text-white px-4 py-2 rounded-lg font-semibold hover:bg-[#000666] transition flex items-center gap-2 shadow-lg shadow-indigo-900/20">
         <span class="material-symbols-outlined text-sm">add</span> Add Student
     </button>
     <?php endif; ?>
@@ -162,11 +162,11 @@ require_once '../includes/header.php';
 <?php endif; ?>
 
 <!-- Add Student Modal -->
-<div id="addModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center backdrop-blur-sm">
-    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg">
-        <div class="flex justify-between items-center mb-4">
-            <h2 class="text-xl font-bold text-[#1a237e]">Add New Student</h2>
-            <button onclick="document.getElementById('addModal').classList.add('hidden')" class="text-gray-500 hover:text-gray-700"><span class="material-symbols-outlined">close</span></button>
+<div id="addModal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center backdrop-blur-sm transition-opacity duration-300">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg transform scale-95 opacity-0 transition-all duration-300 relative max-h-[90vh] overflow-y-auto" id="modalContent">
+        <div class="flex justify-between items-center mb-6 pb-3 border-b border-gray-100">
+            <h2 class="text-xl font-bold text-[#1a237e] flex items-center gap-2"><span class="material-symbols-outlined">person_add</span> Add New Student</h2>
+            <button type="button" onclick="closeModal()" class="text-gray-400 hover:text-gray-700 hover:bg-gray-100 p-1 rounded-full transition-colors"><span class="material-symbols-outlined">close</span></button>
         </div>
         <form method="POST" action="">
             <input type="hidden" name="add_student" value="1">
@@ -246,12 +246,35 @@ require_once '../includes/header.php';
                     <input type="text" name="roll_number" placeholder="2020-BCS-001" class="w-full px-3 py-2 border rounded focus:ring-1 focus:ring-[#1a237e]">
                 </div>
             </div>
-            <div class="flex justify-end gap-2">
-                <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-50">Cancel</button>
-                <button type="submit" class="bg-[#1a237e] text-white px-4 py-2 rounded hover:bg-[#000666]">Save Student</button>
+            <div class="flex justify-end gap-2 mt-6 pt-4 border-t">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button type="submit" class="bg-[#1a237e] text-white px-6 py-2 rounded hover:bg-[#000666] transition-colors shadow-lg shadow-indigo-900/20">Save Student</button>
             </div>
         </form>
     </div>
 </div>
+
+<script>
+function openModal() {
+    const modal = document.getElementById('addModal');
+    const content = document.getElementById('modalContent');
+    modal.classList.remove('hidden');
+    // Small delay to allow display:block to apply before animating opacity/transform
+    setTimeout(() => {
+        content.classList.remove('scale-95', 'opacity-0');
+        content.classList.add('scale-100', 'opacity-100');
+    }, 10);
+}
+
+function closeModal() {
+    const modal = document.getElementById('addModal');
+    const content = document.getElementById('modalContent');
+    content.classList.remove('scale-100', 'opacity-100');
+    content.classList.add('scale-95', 'opacity-0');
+    setTimeout(() => {
+        modal.classList.add('hidden');
+    }, 300); // Wait for transition to finish
+}
+</script>
 
 <?php require_once '../includes/footer.php'; ?>
