@@ -40,3 +40,6 @@ assets/uploads/
 # Backup files
 *.backup
 *.bak
+
+# Ignore AI-generated analysis
+System_Analysis.md
