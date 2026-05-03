@@ -41,5 +41,6 @@ assets/uploads/
 *.backup
 *.bak
 
-# Ignore AI-generated analysis
+# Ignore AI-generated analysis & personal learning notes
 System_Analysis.md
+GitHub_Commands_Learning.md
