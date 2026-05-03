@@ -2,94 +2,62 @@
 $current_page = basename($_SERVER['PHP_SELF']);
 $role = $_SESSION['role'] ?? 'user';
 ?>
-<aside class="fixed left-0 top-0 h-screen w-72 bg-white border-r border-gray-200 flex flex-col py-8 gap-2 z-50">
-<div class="px-8 mb-8">
-<div class="flex items-center gap-3">
-<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center">
-<!-- Local logo will be loaded from /assets/images/logo.png -->
-<img src="<?php echo BASE_URL; ?>/assets/images/logo.png" alt="FAST Logo" class="w-8 h-8 object-contain" onerror="this.outerHTML='<span class=\'material-symbols-outlined text-white\'>school</span>'" />
+<aside class="fixed left-0 top-0 h-screen w-72 bg-white border-r border-slate-200 flex flex-col py-8 z-50 shadow-soft">
+<div class="px-8 mb-10">
+    <div class="flex items-center gap-4">
+        <div class="w-12 h-12 flex items-center justify-center bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg">
+            <span class="material-symbols-outlined text-white text-2xl">school</span>
+        </div>
+        <div>
+            <h1 class="text-xl font-black text-primary font-serif tracking-tight leading-none mb-1">FAST Uni</h1>
+            <p class="text-[10px] text-slate-400 font-bold uppercase tracking-[0.2em]">Management</p>
+        </div>
+    </div>
 </div>
-<div>
-<h1 class="text-lg font-black text-primary-container text-gray-900 uppercase tracking-wider">FAST Uni</h1>
-<p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Management System</p>
-</div>
-</div>
-</div>
-<nav class="flex-1 space-y-1">
-<?php if ($role === 'admin'): ?>
-<a class="<?php echo $current_page == 'index.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/index.php">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-md">Dashboard</span>
+<nav class="flex-1 space-y-1.5 px-4 overflow-y-auto">
+<?php 
+$nav_items = [
+    'admin' => [
+        ['page' => 'index.php', 'icon' => 'dashboard', 'label' => 'Dashboard', 'path' => '/index.php'],
+        ['page' => 'students.php', 'icon' => 'group', 'label' => 'Students', 'path' => '/pages/students.php'],
+        ['page' => 'instructors.php', 'icon' => 'person', 'label' => 'Instructors', 'path' => '/pages/instructors.php'],
+        ['page' => 'courses.php', 'icon' => 'school', 'label' => 'Courses', 'path' => '/pages/courses.php'],
+        ['page' => 'enrollments.php', 'icon' => 'how_to_reg', 'label' => 'Enrollments', 'path' => '/pages/enrollments.php'],
+        ['page' => 'classes.php', 'icon' => 'meeting_room', 'label' => 'Classes', 'path' => '/pages/classes.php'],
+        ['page' => 'exams.php', 'icon' => 'quiz', 'label' => 'Exams', 'path' => '/pages/exams.php'],
+        ['page' => 'reports.php', 'icon' => 'assessment', 'label' => 'Reports', 'path' => '/pages/reports.php'],
+    ],
+    'instructor' => [
+        ['page' => 'instructor_dashboard.php', 'icon' => 'dashboard', 'label' => 'Dashboard', 'path' => '/pages/instructor_dashboard.php'],
+        ['page' => 'courses.php', 'icon' => 'school', 'label' => 'Courses', 'path' => '/pages/courses.php'],
+        ['page' => 'reports.php', 'icon' => 'assessment', 'label' => 'Reports', 'path' => '/pages/reports.php'],
+    ],
+    'student' => [
+        ['page' => 'student_dashboard.php', 'icon' => 'dashboard', 'label' => 'Dashboard', 'path' => '/pages/student_dashboard.php'],
+        ['page' => 'courses.php', 'icon' => 'school', 'label' => 'Courses', 'path' => '/pages/courses.php'],
+        ['page' => 'reports.php', 'icon' => 'assessment', 'label' => 'Reports', 'path' => '/pages/reports.php'],
+    ],
+    'parent' => [
+        ['page' => 'parent_dashboard.php', 'icon' => 'dashboard', 'label' => 'Dashboard', 'path' => '/pages/parent_dashboard.php'],
+        ['page' => 'reports.php', 'icon' => 'assessment', 'label' => 'Reports', 'path' => '/pages/reports.php'],
+    ]
+];
+
+$current_role_items = $nav_items[$role] ?? [];
+foreach ($current_role_items as $item):
+    $is_active = ($current_page == $item['page']);
+?>
+<a class="sidebar-item <?php echo $is_active ? 'active' : 'text-slate-600'; ?> rounded-xl px-4 py-3 flex items-center gap-3 font-medium text-sm" href="<?php echo BASE_URL . $item['path']; ?>">
+    <span class="material-symbols-outlined"><?php echo $item['icon']; ?></span>
+    <span><?php echo $item['label']; ?></span>
 </a>
-<a class="<?php echo $current_page == 'students.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/students.php">
-<span class="material-symbols-outlined">group</span>
-<span class="font-body-md">Students</span>
-</a>
-<a class="<?php echo $current_page == 'instructors.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/instructors.php">
-<span class="material-symbols-outlined">person</span>
-<span class="font-body-md">Instructors</span>
-</a>
-<a class="<?php echo $current_page == 'courses.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
-<span class="material-symbols-outlined">school</span>
-<span class="font-body-md">Courses</span>
-</a>
-<a class="<?php echo $current_page == 'enrollments.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/enrollments.php">
-<span class="material-symbols-outlined">how_to_reg</span>
-<span class="font-body-md">Enrollments</span>
-</a>
-<a class="<?php echo $current_page == 'classes.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/classes.php">
-<span class="material-symbols-outlined">meeting_room</span>
-<span class="font-body-md">Classes</span>
-</a>
-<a class="<?php echo $current_page == 'exams.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/exams.php">
-<span class="material-symbols-outlined">quiz</span>
-<span class="font-body-md">Exams</span>
-</a>
-<a class="<?php echo $current_page == 'reports.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
-<span class="material-symbols-outlined">assessment</span>
-<span class="font-body-md">Reports</span>
-</a>
-<?php elseif ($role === 'instructor'): ?>
-<a class="<?php echo $current_page == 'instructor_dashboard.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/instructor_dashboard.php">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-md">Dashboard</span>
-</a>
-<a class="<?php echo $current_page == 'courses.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
-<span class="material-symbols-outlined">school</span>
-<span class="font-body-md">Courses</span>
-</a>
-<a class="<?php echo $current_page == 'reports.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
-<span class="material-symbols-outlined">assessment</span>
-<span class="font-body-md">Reports</span>
-</a>
-<?php elseif ($role === 'student'): ?>
-<a class="<?php echo $current_page == 'student_dashboard.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/student_dashboard.php">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-md">Dashboard</span>
-</a>
-<a class="<?php echo $current_page == 'courses.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/courses.php">
-<span class="material-symbols-outlined">school</span>
-<span class="font-body-md">Courses</span>
-</a>
-<a class="<?php echo $current_page == 'reports.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
-<span class="material-symbols-outlined">assessment</span>
-<span class="font-body-md">Reports</span>
-</a>
-<?php elseif ($role === 'parent'): ?>
-<a class="<?php echo $current_page == 'parent_dashboard.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/parent_dashboard.php">
-<span class="material-symbols-outlined">dashboard</span>
-<span class="font-body-md">Dashboard</span>
-</a>
-<a class="<?php echo $current_page == 'reports.php' ? 'bg-primary-container text-white shadow-lg shadow-red-900/20' : 'text-slate-600 hover:bg-gray-100 hover:text-gray-900'; ?> rounded-lg mx-4 px-4 py-3 flex items-center gap-3 transition-all duration-300" href="<?php echo BASE_URL; ?>/pages/reports.php">
-<span class="material-symbols-outlined">assessment</span>
-<span class="font-body-md">Reports</span>
-</a>
-<?php endif; ?>
+<?php endforeach; ?>
 </nav>
-<div class="mt-auto border-t border-slate-100 pt-6">
-<a class="text-error mx-4 px-4 py-3 flex items-center gap-3 hover:bg-error-container/20 rounded-lg transition-all duration-300" href="<?php echo BASE_URL; ?>/auth/logout.php">
+<div class="px-4 mt-auto pt-6 border-t border-slate-100">
+<a class="sidebar-item text-error rounded-xl px-4 py-3 flex items-center gap-3 font-medium text-sm hover:bg-red-50" href="<?php echo BASE_URL; ?>/auth/logout.php">
 <span class="material-symbols-outlined">logout</span>
-<span class="font-body-md">Logout</span>
+<span>Logout</span>
 </a>
 </div>
 </aside>
+

@@ -19,19 +19,37 @@ $role = $_SESSION['role'] ?? 'user';
           theme: {
             extend: {
               "colors": {
-                      "primary-container": "#A51C30", /* Harvard Crimson */
-                      "primary-dark": "#750F1D", /* Darker Crimson */
-                      "secondary-accent": "#D4AF37", /* Gold for contrast */
-                      "success-green": "#10b981", 
-                      "surface-glass": "rgba(255, 255, 255, 0.90)",
-                      "background": "#F5F5F5" /* Premium soft gray */
+                      "primary": {
+                        "DEFAULT": "#1e40af",
+                        "dark": "#1e3a8a",
+                        "light": "#3b82f6",
+                        "soft": "#eff6ff"
+                      },
+                      "secondary": {
+                        "DEFAULT": "#1f2937",
+                        "dark": "#111827",
+                        "light": "#374151"
+                      },
+                      "accent": "#f59e0b",
+                      "success": "#10b981",
+                      "warning": "#f59e0b",
+                      "error": "#ef4444",
+                      "background": "#f8fafc",
+                      "surface": "#ffffff",
+                      "muted": "#f1f5f9"
               },
               "fontFamily": {
-                      "body-md": ["Inter", "sans-serif"],
-                      "h2": ["Playfair Display", "serif"],
-                      "label-sm": ["Inter", "sans-serif"],
-                      "body-lg": ["Inter", "sans-serif"],
-                      "h1": ["Playfair Display", "serif"]
+                      "sans": ["Inter", "sans-serif"],
+                      "serif": ["Playfair Display", "serif"]
+              },
+              "borderRadius": {
+                "xl": "1rem",
+                "2xl": "1.5rem",
+                "3xl": "2rem"
+              },
+              "boxShadow": {
+                "soft": "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)",
+                "premium": "0 20px 50px -12px rgba(0, 0, 0, 0.12)"
               }
             },
           },
@@ -39,52 +57,80 @@ $role = $_SESSION['role'] ?? 'user';
     </script>
 <style>
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid rgba(255, 255, 255, 0.6);
-            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .glass-card:hover {
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
             border-color: rgba(255, 255, 255, 0.8);
         }
-        .glass-card-dark {
+        .sidebar-item {
+            transition: all 0.3s ease;
+        }
+        .sidebar-item:hover {
+            background: rgba(165, 28, 48, 0.05);
+            transform: translateX(4px);
+        }
+        .sidebar-item.active {
             background: #A51C30;
-            border: 1px solid rgba(255, 255, 255, 0.1);
             color: white;
-            box-shadow: 0 10px 40px -10px rgba(165,28,48,0.4);
+            box-shadow: 0 10px 20px -5px rgba(165, 28, 48, 0.3);
         }
         .material-symbols-outlined {
-            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .sidebar-item.active .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
         }
     </style>
 </head>
-<body class="bg-background font-body-md text-on-background selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<body class="bg-background font-sans text-secondary-dark antialiased">
 <?php include 'sidebar.php'; ?>
 <main class="ml-72 min-h-screen">
-<header class="sticky top-0 z-40 flex items-center justify-between px-10 h-20 w-full bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] font-['Inter'] antialiased">
+<header class="sticky top-0 z-40 flex items-center justify-between px-10 h-20 w-full bg-white/80 backdrop-blur-md border-b border-slate-200/50 shadow-sm font-sans">
 <div class="flex items-center gap-4 w-1/3">
-    <!-- Optional search globally -->
+    <div class="relative w-full max-w-xs group">
+        <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+        <input type="text" placeholder="Search anything..." class="w-full pl-10 pr-4 py-2 bg-slate-100/50 border-none rounded-xl text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none">
+    </div>
 </div>
-<div class="flex items-center gap-4">
-<div class="flex items-center gap-2">
-<button class="w-10 h-10 flex items-center justify-center rounded-full text-slate-500 hover:bg-indigo-50/50 transition-all active:scale-95">
-<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
-</button>
-</div>
-<div class="h-8 w-[1px] bg-outline-variant mx-2"></div>
-<div class="flex items-center gap-3 pl-2">
-<div class="text-right">
-<p class="text-sm font-bold text-gray-900"><?php echo htmlspecialchars(ucfirst($username)); ?></p>
-<p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest"><?php echo htmlspecialchars($role); ?></p>
-</div>
-<div class="w-10 h-10 rounded-xl bg-gray-100 border border-gray-200 text-primary-container flex items-center justify-center font-bold font-serif text-lg">
-    <?php echo strtoupper(substr($username, 0, 1)); ?>
-</div>
-</div>
+<div class="flex items-center gap-6">
+    <div class="flex items-center gap-2">
+        <button class="w-10 h-10 flex items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 hover:text-primary transition-all relative">
+            <span class="material-symbols-outlined">notifications</span>
+            <span class="absolute top-2 right-2 w-2 h-2 bg-primary rounded-full border-2 border-white"></span>
+        </button>
+    </div>
+    <div class="h-8 w-px bg-slate-200"></div>
+    <div class="flex items-center gap-3">
+        <div class="text-right hidden sm:block">
+            <p class="text-sm font-bold text-slate-900 leading-none mb-1"><?php echo htmlspecialchars(ucfirst($username)); ?></p>
+            <p class="text-[10px] font-bold text-primary uppercase tracking-widest"><?php echo htmlspecialchars($role); ?></p>
+        </div>
+        <div class="w-11 h-11 rounded-xl bg-primary-soft border border-primary/10 text-primary flex items-center justify-center font-bold text-lg shadow-sm">
+            <?php echo strtoupper(substr($username, 0, 1)); ?>
+        </div>
+    </div>
 </div>
 </header>
-<div class="p-10 space-y-6">
+<div class="p-10 space-y-8">
 <?php display_flash_messages(); ?>
